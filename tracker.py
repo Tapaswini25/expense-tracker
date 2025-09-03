@@ -58,3 +58,34 @@ class ExpenseManager:
         print("\n--- All Expenses ---")
         for exp in expenses:
             print(f"[{exp.expense_id}] {exp.date} | {exp.category} | {exp.description} | ${exp.amount:.2f}")
+
+    def update_expense(self, expense_id, category=None, description=None, amount=None):
+        expenses = self._read_expenses()
+        found = False
+        for exp in expenses:
+            if exp.expense_id == expense_id:
+                if category: exp.category = category
+                if description: exp.description = description
+                if amount: exp.amount = float(amount)
+                found = True
+                break
+        if found:
+            self._write_expenses(expenses)
+            print(" Expense updated successfully.")
+        else:
+            print(" Expense ID not found.")
+
+    def delete_expense(self, expense_id):
+        expenses = self._read_expenses()
+        updated_expenses = [exp for exp in expenses if exp.expense_id != expense_id]
+
+        if len(updated_expenses) == len(expenses):
+            print(" Expense ID not found.")
+            return
+
+        # Reassign IDs
+        for idx, exp in enumerate(updated_expenses, 1):
+            exp.expense_id = str(idx)
+
+        self._write_expenses(updated_expenses)
+        print(" Expense deleted successfully.")
