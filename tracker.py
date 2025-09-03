@@ -22,6 +22,7 @@ class ExpenseManager:
             with open(self.FILE_NAME, "w", newline="") as file:
                 writer = csv.writer(file)
                 writer.writerow(["ID", "Date", "Category", "Description", "Amount"])  # Header
+
     def _read_expenses(self):
         expenses = []
         with open(self.FILE_NAME, "r") as file:
@@ -36,3 +37,24 @@ class ExpenseManager:
             writer.writerow(["ID", "Date", "Category", "Description", "Amount"])
             for exp in expenses:
                 writer.writerow(exp.to_list())
+
+    def add_expense(self, category, description, amount):
+        expenses = self._read_expenses()
+        expense_id = str(len(expenses) + 1)
+        date = datetime.now().strftime("%Y-%m-%d")
+        new_exp = Expense(expense_id, date, category, description, amount)
+
+        with open(self.FILE_NAME, "a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(new_exp.to_list())
+
+        print(f" Expense added: {description} - ${amount}")
+
+    def view_expenses(self):
+        expenses = self._read_expenses()
+        if not expenses:
+            print(" No expenses found.")
+            return
+        print("\n--- All Expenses ---")
+        for exp in expenses:
+            print(f"[{exp.expense_id}] {exp.date} | {exp.category} | {exp.description} | ${exp.amount:.2f}")
