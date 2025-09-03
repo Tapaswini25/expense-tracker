@@ -98,16 +98,16 @@ class ExpenseManager:
             for exp in filtered:
                 print(f"[{exp.expense_id}] {exp.date} | {exp.description} | ${exp.amount:.2f}")
         else:
-            print("⚠️ No expenses found in this category.")
+            print(" No expenses found in this category.")
 
     def show_summary(self):
         expenses = self._read_expenses()
         if not expenses:
-            print("⚠️ No expenses to summarize.")
+            print(" No expenses to summarize.")
             return
 
         total = sum(exp.amount for exp in expenses)
-        print(f"\n💰 Total Spent: ${total:.2f}")
+        print(f"\n Total Spent: ${total:.2f}")
 
         category_summary = {}
         for exp in expenses:
@@ -116,3 +116,58 @@ class ExpenseManager:
         print("\n--- Category Breakdown ---")
         for cat, amt in category_summary.items():
             print(f"{cat}: ${amt:.2f}")
+
+# ==============================
+# Menu / Main Program
+# ==============================
+def main():
+    manager = ExpenseManager()
+
+    while True:
+        print("\n========= Expense Tracker =========")
+        print("1. Add Expense")
+        print("2. View Expenses")
+        print("3. Update Expense")
+        print("4. Delete Expense")
+        print("5. Search by Category")
+        print("6. Show Summary")
+        print("7. Exit")
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            category = input("Enter category: ")
+            description = input("Enter description: ")
+            amount = input("Enter amount: ")
+            manager.add_expense(category, description, amount)
+
+        elif choice == "2":
+            manager.view_expenses()
+
+        elif choice == "3":
+            expense_id = input("Enter Expense ID to update: ")
+            category = input("New category (leave blank to skip): ")
+            description = input("New description (leave blank to skip): ")
+            amount = input("New amount (leave blank to skip): ")
+            manager.update_expense(expense_id, category or None, description or None, amount or None)
+
+        elif choice == "4":
+            expense_id = input("Enter Expense ID to delete: ")
+            manager.delete_expense(expense_id)
+
+        elif choice == "5":
+            category = input("Enter category to search: ")
+            manager.search_by_category(category)
+
+        elif choice == "6":
+            manager.show_summary()
+
+        elif choice == "7":
+            print(" Exiting Expense Tracker. Bye!")
+            break
+
+        else:
+            print(" Invalid choice. Try again.")
+
+
+if __name__ == "__main__":
+    main()
