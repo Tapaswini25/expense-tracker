@@ -89,3 +89,30 @@ class ExpenseManager:
 
         self._write_expenses(updated_expenses)
         print(" Expense deleted successfully.")
+
+    def search_by_category(self, category):
+        expenses = self._read_expenses()
+        filtered = [exp for exp in expenses if exp.category.lower() == category.lower()]
+        if filtered:
+            print(f"\n--- Expenses in Category: {category} ---")
+            for exp in filtered:
+                print(f"[{exp.expense_id}] {exp.date} | {exp.description} | ${exp.amount:.2f}")
+        else:
+            print("⚠️ No expenses found in this category.")
+
+    def show_summary(self):
+        expenses = self._read_expenses()
+        if not expenses:
+            print("⚠️ No expenses to summarize.")
+            return
+
+        total = sum(exp.amount for exp in expenses)
+        print(f"\n💰 Total Spent: ${total:.2f}")
+
+        category_summary = {}
+        for exp in expenses:
+            category_summary[exp.category] = category_summary.get(exp.category, 0) + exp.amount
+
+        print("\n--- Category Breakdown ---")
+        for cat, amt in category_summary.items():
+            print(f"{cat}: ${amt:.2f}")
