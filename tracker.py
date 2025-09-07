@@ -1,3 +1,7 @@
+import os
+import csv
+from datetime import datetime
+
 # ==============================
 # Expense Class
 # ==============================
@@ -48,7 +52,7 @@ class ExpenseManager:
             writer = csv.writer(file)
             writer.writerow(new_exp.to_list())
 
-        print(f" Expense added: {description} - ${amount}")
+        print(f" Expense added: {description} - Rs.{amount}")
 
     def view_expenses(self):
         expenses = self._read_expenses()
@@ -57,7 +61,7 @@ class ExpenseManager:
             return
         print("\n--- All Expenses ---")
         for exp in expenses:
-            print(f"[{exp.expense_id}] {exp.date} | {exp.category} | {exp.description} | ${exp.amount:.2f}")
+            print(f"[{exp.expense_id}] {exp.date} | {exp.category} | {exp.description} | Rs.{exp.amount:.2f}")
 
     def update_expense(self, expense_id, category=None, description=None, amount=None):
         expenses = self._read_expenses()
@@ -107,7 +111,7 @@ class ExpenseManager:
             return
 
         total = sum(exp.amount for exp in expenses)
-        print(f"\n Total Spent: ${total:.2f}")
+        print(f"\n Total Spent: Rs.{total:.2f}")
 
         category_summary = {}
         for exp in expenses:
@@ -115,7 +119,7 @@ class ExpenseManager:
 
         print("\n--- Category Breakdown ---")
         for cat, amt in category_summary.items():
-            print(f"{cat}: ${amt:.2f}")
+            print(f"{cat}: RS.{amt:.2f}")
 
 # ==============================
 # Menu / Main Program
@@ -137,7 +141,7 @@ def main():
         if choice == "1":
             category = input("Enter category: ")
             description = input("Enter description: ")
-            amount = input("Enter amount: ")
+            amount = input("Enter amount: Rs.")
             manager.add_expense(category, description, amount)
 
         elif choice == "2":
@@ -151,7 +155,7 @@ def main():
             manager.update_expense(expense_id, category or None, description or None, amount or None)
 
         elif choice == "4":
-            expense_id = input("Enter Expense ID to delete: ")
+            expense_id = input("Enter Expense_ID to delete: ")
             manager.delete_expense(expense_id)
 
         elif choice == "5":
